@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+:root {
+  --natural-bg: #FDFCF9;
+  --natural-text: #3D4035;
+  --natural-card: #FFFFFF;
+  --natural-primary: #5C6D4C;
+  --natural-primary-light: #A9B388;
+  --natural-accent: #A68A64;
+  --natural-muted: #8A8F7C;
+  --natural-dark-muted: #6B705C;
+  --natural-subtle: #A3A895;
+  --natural-fill: #F5F2EA;
+  --natural-divider: #F0ECE4;
+  --natural-border: #E9E4D8;
+  --natural-frame: #F3F1EA;
+}
+
+.dark {
+  --natural-bg: #1A1C16;
+  --natural-text: #E8E8E2;
+  --natural-card: #22251D;
+  --natural-primary: #9BB082;
+  --natural-primary-light: #5C6D4C;
+  --natural-accent: #C2A878;
+  --natural-muted: #A3A895;
+  --natural-dark-muted: #D3D6CB;
+  --natural-subtle: #7A7E6E;
+  --natural-fill: #262920;
+  --natural-divider: #2E3128;
+  --natural-border: #383B31;
+  --natural-frame: #131411;
+}
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Newsreader", "Georgia", serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Natural Tones Custom Palette mapped to CSS variables */
+  --color-natural-bg: var(--natural-bg);
+  --color-natural-text: var(--natural-text);
+  --color-natural-card: var(--natural-card);
+  --color-natural-primary: var(--natural-primary);
+  --color-natural-primary-light: var(--natural-primary-light);
+  --color-natural-accent: var(--natural-accent);
+  --color-natural-muted: var(--natural-muted);
+  --color-natural-dark-muted: var(--natural-dark-muted);
+  --color-natural-subtle: var(--natural-subtle);
+  --color-natural-fill: var(--natural-fill);
+  --color-natural-divider: var(--natural-divider);
+  --color-natural-border: var(--natural-border);
+  --color-natural-frame: var(--natural-frame);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-natural-bg);
+  color: var(--color-natural-text);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+/* Custom scrollbar matching Natural Tones style */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-natural-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-natural-subtle);
+}
+
+/* Custom Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animation-delay-75 { animation-delay: 75ms; }
+.animation-delay-150 { animation-delay: 150ms; }
+.animation-delay-225 { animation-delay: 225ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-450 { animation-delay: 450ms; }
+
