@@ -20,6 +20,7 @@ import RecentSessionsList from "./components/RecentSessionsList";
 import AddSubjectModal from "./components/AddSubjectModal";
 import LogSessionModal from "./components/LogSessionModal";
 import FocusTimer from "./components/FocusTimer";
+import ConfirmationModal from "./components/ConfirmationModal";
 
 export default function App() {
   const TODAY_STR = "2026-07-14"; // Reference local date as specified
@@ -86,6 +87,41 @@ export default function App() {
   const [selectedSubjectIdForLog, setSelectedSubjectIdForLog] = useState<string | null>(null);
   const [timeRange, setTimeRange] = useState<"week" | "sevenDays">("week");
 
+  // --- CUSTOM CONFIRMATION STATE ---
+  const [confirmConfig, setConfirmConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    confirmText?: string;
+    cancelText?: string;
+    isDanger?: boolean;
+    onConfirm: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    onConfirm: () => {},
+  });
+
+  const showConfirm = (
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    isDanger = false,
+    confirmText = "Confirm",
+    cancelText = "Cancel"
+  ) => {
+    setConfirmConfig({
+      isOpen: true,
+      title,
+      message,
+      confirmText,
+      cancelText,
+      isDanger,
+      onConfirm,
+    });
+  };
+
   // --- STATE MUTATORS ---
   const handleAddSubject = (name: string, targetHours: number, color: string, group: string) => {
     const newSub: Subject = {
@@ -114,10 +150,18 @@ export default function App() {
   };
 
   const handleDeleteSubject = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this subject? All logged focus hours for this subject will also be permanently deleted.")) {
-      setSubjects((prev) => prev.filter((sub) => sub.id !== id));
-      setSessions((prev) => prev.filter((sess) => sess.subjectId !== id));
-    }
+    const subjectName = subjects.find(sub => sub.id === id)?.name || "this subject";
+    showConfirm(
+      "Delete Subject?",
+      `Are you sure you want to delete "${subjectName}"? All logged focus hours for this subject will also be permanently deleted.`,
+      () => {
+        setSubjects((prev) => prev.filter((sub) => sub.id !== id));
+        setSessions((prev) => prev.filter((sess) => sess.subjectId !== id));
+      },
+      true,
+      "Delete",
+      "Cancel"
+    );
   };
 
   const handleTriggerLogForSubject = (subjectId: string) => {
@@ -136,17 +180,31 @@ export default function App() {
   };
 
   const handleResetData = () => {
-    if (window.confirm("Are you sure you want to restore the default academic sample data? All current custom additions will be overwritten.")) {
-      setSubjects(SAMPLE_SUBJECTS);
-      setSessions(SAMPLE_SESSIONS);
-    }
+    showConfirm(
+      "Restore Defaults?",
+      "Are you sure you want to restore the default academic sample data? All current custom additions will be overwritten.",
+      () => {
+        setSubjects(SAMPLE_SUBJECTS);
+        setSessions(SAMPLE_SESSIONS);
+      },
+      false,
+      "Restore",
+      "Cancel"
+    );
   };
 
   const handleClearAllData = () => {
-    if (window.confirm("Danger: This will delete ALL subjects and study sessions from your local browser database. Proceed?")) {
-      setSubjects([]);
-      setSessions([]);
-    }
+    showConfirm(
+      "Danger: Clear All Data?",
+      "This will permanently delete ALL subjects and study sessions from your local browser database. This action cannot be undone.",
+      () => {
+        setSubjects([]);
+        setSessions([]);
+      },
+      true,
+      "Clear All",
+      "Cancel"
+    );
   };
 
   // --- MOTIVATIONAL EXTRA ---
@@ -417,6 +475,17 @@ export default function App() {
         onLog={handleLogSession}
         defaultSubjectId={selectedSubjectIdForLog}
         todayStr={TODAY_STR}
+      />
+
+      <ConfirmationModal
+        isOpen={confirmConfig.isOpen}
+        title={confirmConfig.title}
+        message={confirmConfig.message}
+        confirmText={confirmConfig.confirmText}
+        cancelText={confirmConfig.cancelText}
+        isDanger={confirmConfig.isDanger}
+        onConfirm={confirmConfig.onConfirm}
+        onClose={() => setConfirmConfig((prev) => ({ ...prev, isOpen: false }))}
       />
     </div>
   );
